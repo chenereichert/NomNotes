@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <script type="importmap"></script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NomNotes</title>
@@ -31,7 +32,7 @@
         <span class="dismiss">🗙</span>
     </div>
 
-    <script src="_framework/blazor.webassembly.js"></script>
+    <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
 
     <script>
         window.downloadFileFromBase64 = (fileName, base64String) => {

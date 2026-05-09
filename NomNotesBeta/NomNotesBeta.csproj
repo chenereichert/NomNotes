@@ -14,12 +14,7 @@
   </ItemGroup>
   
   <PropertyGroup>
-    <BlazorFingerprintEnabled>false</BlazorFingerprintEnabled>
-  </PropertyGroup>
-  
-  <PropertyGroup>
-    <!-- Disables the fingerprinting of static assets in .NET 10 -->
-    <FingerprintAssets>false</FingerprintAssets>
+    <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
   </PropertyGroup>
 
 </Project>
