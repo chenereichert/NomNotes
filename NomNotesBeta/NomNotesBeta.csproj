@@ -14,7 +14,7 @@
   </ItemGroup>
   
   <PropertyGroup>
-    <BlazorCacheBootResources>false</BlazorCacheBootResources>
     <BlazorFingerprintEnabled>false</BlazorFingerprintEnabled>
   </PropertyGroup>
+  
 </Project>
