@@ -1,0 +1,230 @@
+﻿@page "/NomNotes/"
+@using Markdig
+@inject IJSRuntime JS
+
+<PageTitle>Daily Wellness Log</PageTitle>
+
+<div class="container mt-4" style="max-width: 800px;">
+    <h1 class="mb-4">🌱 Daily Wellness Log</h1>
+    <p class="text-muted"><b>Date:</b> @DateTime.Today.ToString("MMMM dd, yyyy")</p>
+
+    <!-- SECTION 1: Morning & Hydration (Side by Side) -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">☀️ Morning Energy</h5>
+                    <label class="form-label">How did you feel waking up? (1-5)</label>
+                    <input type="range" class="form-range" min="1" max="5" @bind="dailyLog.WakeUpEnergy" />
+                    <div class="d-flex justify-content-between text-muted small">
+                        <span>Exhausted</span>
+                        <span>Current: @dailyLog.WakeUpEnergy</span>
+                        <span>Energized</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">💧 Hydration Tracker</h5>
+                    <label class="form-label">Glasses of water today:</label>
+                    <div class="d-flex align-items-center gap-3">
+                        <button class="btn btn-outline-secondary" @onclick="() => { if (dailyLog.WaterGlasses > 0) dailyLog.WaterGlasses--; }">-</button>
+                        <h3 class="mb-0">@dailyLog.WaterGlasses</h3>
+                        <button class="btn btn-outline-primary" @onclick="() => dailyLog.WaterGlasses++">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 2: Food Tracker -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title mb-3">🍽️ Meals</h5>
+            
+            <!-- Input Form -->
+            <div class="row g-2 mb-4">
+                <div class="col-md-3">
+                    <select @bind="newEntry.MealType" class="form-select">
+                        <option value="Breakfast">Breakfast</option>
+                        <option value="Lunch">Lunch</option>
+                        <option value="Dinner">Dinner</option>
+                        <option value="Snack">Snack</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <input @bind="newEntry.FoodItem" class="form-control" placeholder="What did you eat?" />
+                </div>
+                <div class="col-md-3">
+                    <input @bind="newEntry.Notes" class="form-control" placeholder="Notes (optional)" />
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary w-100" @onclick="AddFoodEntry">Add</button>
+                </div>
+            </div>
+
+            <!-- Food Table -->
+            @if (dailyLog.Meals.Any())
+            {
+                <table class="table table-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th>Meal</th>
+                            <th>Food</th>
+                            <th>Notes</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in dailyLog.Meals)
+                        {
+                            <tr>
+                                <td><span class="badge bg-secondary">@item.MealType</span></td>
+                                <td>@item.FoodItem</td>
+                                <td>@item.Notes</td>
+                                <td><i class="fa fa-trash-o" @onclick="() => RemoveMeal(item)"></i></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="text-muted small">No meals logged yet today.</p>
+            }
+        </div>
+    </div>
+
+    <!-- SECTION 3: End of Day Notes -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title">🌙 End of Day Notes</h5>
+            <textarea @bind="dailyLog.EndOfDayNotes" class="form-control" rows="3" placeholder="How did today go? Any reflections or symptoms?"></textarea>
+        </div>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="d-flex gap-2 mb-5">
+        <button class="btn btn-success" @onclick="DownloadMarkdown">📄 Export to Markdown</button>
+        <button class="btn btn-danger" @onclick="DownloadPdf">📕 Export to PDF</button>
+    </div>
+</div>
+
+@code {
+    // 1. Data Models
+    public class WellnessLog
+    {
+        public int WakeUpEnergy { get; set; } = 3;
+        public int WaterGlasses { get; set; } = 0;
+        public string EndOfDayNotes { get; set; } = string.Empty;
+        public List<FoodEntry> Meals { get; set; } = new();
+    }
+
+    public class FoodEntry
+    {
+        public string MealType { get; set; } = "Breakfast";
+        public string FoodItem { get; set; } = string.Empty;
+        public string Notes { get; set; } = string.Empty;
+    }
+
+    // 2. State Management
+    private WellnessLog dailyLog = new();
+    private FoodEntry newEntry = new();
+
+    // 3. Logic to Add Food
+    private void AddFoodEntry()
+    {
+        if (!string.IsNullOrWhiteSpace(newEntry.FoodItem))
+        {
+            dailyLog.Meals.Add(new FoodEntry
+            {
+                MealType = newEntry.MealType,
+                FoodItem = newEntry.FoodItem,
+                Notes = newEntry.Notes
+            });
+
+            // Reset food item but keep meal type
+            newEntry = new() { MealType = newEntry.MealType };
+        }
+    }
+
+    private void RemoveMeal(FoodEntry meal)
+    {
+        dailyLog.Meals.Remove(meal);
+    }
+
+    // 4. Generate and Download Markdown & PDF
+    // Helper method to generate the raw Markdown text
+    private string GetMarkdownString()
+    {
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine($"# Wellness Log - {DateTime.Today:yyyy-MM-dd}\n");
+        
+        sb.AppendLine("## 📊 Daily Metrics");
+        sb.AppendLine($"- **Morning Energy Level:** {dailyLog.WakeUpEnergy}/5");
+        sb.AppendLine($"- **Hydration:** {dailyLog.WaterGlasses} glasses of water\n");
+
+        sb.AppendLine("## 🍽️ Food Log");
+        var mealTypes = new[] { "Breakfast", "Lunch", "Dinner", "Snack" };
+        
+        foreach (var meal in mealTypes)
+        {
+            var mealItems = dailyLog.Meals.Where(x => x.MealType == meal).ToList();
+            if (mealItems.Any())
+            {
+                sb.AppendLine($"### {meal}");
+                foreach (var item in mealItems)
+                {
+                    var noteStr = string.IsNullOrWhiteSpace(item.Notes) ? "" : $" *(Note: {item.Notes})*";
+                    sb.AppendLine($"- {item.FoodItem}{noteStr}");
+                }
+                sb.AppendLine();
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(dailyLog.EndOfDayNotes))
+        {
+            sb.AppendLine("## 🌙 End of Day Notes");
+            sb.AppendLine(dailyLog.EndOfDayNotes);
+        }
+
+        return sb.ToString();
+    }
+
+    // Existing Markdown Download
+    private async Task DownloadMarkdown()
+    {
+        var markdownText = GetMarkdownString();
+        var bytes = System.Text.Encoding.UTF8.GetBytes(markdownText);
+        var base64 = Convert.ToBase64String(bytes);
+        var fileName = $"WellnessLog_{DateTime.Today:yyyy_MM_dd}.md";
+
+        await JS.InvokeVoidAsync("downloadFileFromBase64", fileName, base64);
+    }
+
+    // NEW: PDF Download
+    private async Task DownloadPdf()
+    {
+        // 1. Get the Markdown text
+        var markdownText = GetMarkdownString();
+
+        // 2. Convert the Markdown to HTML using Markdig
+        var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+        var rawHtml = Markdown.ToHtml(markdownText, pipeline);
+
+        // 3. Wrap it in a div to add some basic styling for the PDF
+        // (You can add CSS classes here if you want to style tables, fonts, etc.)
+        var styledHtml = $@"
+            <div style='font-family: Arial, sans-serif; color: #333; line-height: 1.6;'>
+                {rawHtml}
+            </div>";
+
+        var fileName = $"WellnessLog_{DateTime.Today:yyyy_MM_dd}.pdf";
+
+        // 4. Send the HTML to JavaScript to be printed as a PDF
+        await JS.InvokeVoidAsync("downloadPdfFromHtml", styledHtml, fileName);
+    }
+}
