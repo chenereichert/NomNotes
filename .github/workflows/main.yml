@@ -1,0 +1,26 @@
+name: Deploy to GitHub Pages
+on:
+  push:
+    branches: [ main ]
+jobs:
+  deploy-to-github-pages:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x' # Or your version
+    - name: Publish
+      run: dotnet publish -c Release -o release
+    - name: Change base-tag (Optional helper)
+      run: sed -i 's/<base href="\/" \/>/<base href="\/NomNotes\/" \/>/g' release/wwwroot/index.html
+    - name: copy index.html to 404.html
+      run: cp release/wwwroot/index.html release/wwwroot/404.html
+    - name: Add .nojekyll
+      run: touch release/wwwroot/.nojekyll
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        branch: gh-pages
+        folder: release/wwwroot
