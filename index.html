@@ -78,22 +78,67 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <script>
-        // Our new JS Interop function for PDFs
-        window.downloadPdfFromHtml = (htmlContent, fileName) => {
-            // Configure the PDF output
-            const options = {
-                margin: 0.5,
-                filename: fileName,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 }, // Higher scale for better text resolution
-                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-            };
+        window.printHtmlAsPdf = (htmlContent) => {
+            // Open a temporary hidden window
+            const printWindow = window.open('', '_blank', 'width=800,height=600');
 
-            // This library handles generating the PDF and triggering the download automatically
-            html2pdf().set(options).from(htmlContent).save();
+            // Write the HTML into the new window with some print-specific CSS
+            printWindow.document.write(`
+                            <html>
+                            <head>
+                                <title>Daily Wellness Log</title>
+                                <style>
+                                    body { font-family: Arial, sans-serif; padding: 40px; line-height: 1.6; color: #333; }
+                                    /* Hide things we don't want in the PDF */
+                                    @media print {
+                                        @page { margin: 0.5in; }
+                                    }
+                                </style>
+                            </head>
+                            <body>
+                                ${htmlContent}
+                                <script>
+                                    // Wait for it to load, then open the print dialog
+                                    window.onload = function() {
+                                        window.print();
+                                        // Optional: close the window after they print/save
+                                        window.onafterprint = function() { window.close(); }
+                                    };
+                                <\/script>
+                            <\/body>
+                            <\/html>`);
+            printWindow.document.close();
         };
     </script>
 
+    <script>
+        // Upgraded JS Interop function for copying Rich Text (HTML)
+        window.copyRichTextToClipboard = async (htmlContent, plainTextContent) => {
+            try {
+                // We create two versions: the formatted HTML, and the plain text fallback
+                const htmlBlob = new Blob([htmlContent], { type: 'text/html' });
+                const textBlob = new Blob([plainTextContent], { type: 'text/plain' });
+
+                // We package them together into a ClipboardItem
+                const clipboardItem = new ClipboardItem({
+                    'text/html': htmlBlob,
+                    'text/plain': textBlob
+                });
+
+                await navigator.clipboard.write([clipboardItem]);
+                return true;
+            } catch (error) {
+                console.error("Rich text clipboard copy failed", error);
+                // Fallback for older browsers that don't support ClipboardItem well
+                try {
+                    await navigator.clipboard.writeText(plainTextContent);
+                    return true;
+                } catch (fallbackError) {
+                    return false;
+                }
+            }
+        };
+    </script>
 </body>
 
 </html>

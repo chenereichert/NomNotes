@@ -1,10 +1,10 @@
 {
   "mainAssemblyName": "NomNotesBeta",
   "resources": {
-    "hash": "sha256-TypaJ7Opd0v9SL8JIf96jl1fAzFUQtLooHhCr11x3pg=",
+    "hash": "sha256-eDDFzKKuzdlKiAn4mzIzEHrClC4FDT2tbr+g1kGBxJA=",
     "fingerprinting": {
       "Markdig.gg1qs60tnd.wasm": "Markdig.wasm",
-      "Microsoft.AspNetCore.Components.maipyal17d.wasm": "Microsoft.AspNetCore.Components.wasm",
+      "Microsoft.AspNetCore.Components.vqm51q09wr.wasm": "Microsoft.AspNetCore.Components.wasm",
       "Microsoft.AspNetCore.Components.Web.sxfdi1rlxf.wasm": "Microsoft.AspNetCore.Components.Web.wasm",
       "Microsoft.AspNetCore.Components.WebAssembly.j2unnqjdzn.wasm": "Microsoft.AspNetCore.Components.WebAssembly.wasm",
       "Microsoft.Extensions.Configuration.wzhhqnelnl.wasm": "Microsoft.Extensions.Configuration.wasm",
@@ -31,13 +31,13 @@
       "System.Private.Uri.v4mskcjx8e.wasm": "System.Private.Uri.wasm",
       "System.Runtime.InteropServices.JavaScript.un6jcmgrxl.wasm": "System.Runtime.InteropServices.JavaScript.wasm",
       "System.Runtime.InteropServices.0gjjf3ybo0.wasm": "System.Runtime.InteropServices.wasm",
-      "System.Runtime.8b16emhf42.wasm": "System.Runtime.wasm",
+      "System.Runtime.lqmevmifir.wasm": "System.Runtime.wasm",
       "System.Text.Encodings.Web.261hidhqyu.wasm": "System.Text.Encodings.Web.wasm",
       "System.Text.Json.coo5s0ts04.wasm": "System.Text.Json.wasm",
       "System.Text.RegularExpressions.pjhal65ko1.wasm": "System.Text.RegularExpressions.wasm",
       "System.Threading.7a33bthe19.wasm": "System.Threading.wasm",
-      "System.Private.CoreLib.64k2fw2ncc.wasm": "System.Private.CoreLib.wasm",
-      "NomNotesBeta.0rz6he5hqv.wasm": "NomNotesBeta.wasm",
+      "System.Private.CoreLib.olb9c41wt0.wasm": "System.Private.CoreLib.wasm",
+      "NomNotesBeta.prd1hrml7l.wasm": "NomNotesBeta.wasm",
       "dotnet.js": "dotnet.js",
       "dotnet.native.l1ds2rhypd.js": "dotnet.native.js",
       "dotnet.native.etgrtk5jba.wasm": "dotnet.native.wasm",
@@ -62,11 +62,11 @@
     },
     "coreAssembly": {
       "System.Runtime.InteropServices.JavaScript.un6jcmgrxl.wasm": "sha256-hvMt1IDwhfTaPJfe1fJ80HJ5eAum8hxykr0I3aDRcoE=",
-      "System.Private.CoreLib.64k2fw2ncc.wasm": "sha256-ql7XZyZju7HrJF6RRk2oir8N673HAeUlmCL9cXv4poI="
+      "System.Private.CoreLib.olb9c41wt0.wasm": "sha256-BDGXw+QEa5W219SEm8bn+pJzTF4gS2ctngxc5k2nHeg="
     },
     "assembly": {
       "Markdig.gg1qs60tnd.wasm": "sha256-4D0IZt/9TSpMS12pWzGPUMM569yE1CV0smyMNWbcyIo=",
-      "Microsoft.AspNetCore.Components.maipyal17d.wasm": "sha256-3oL5/dJD4Y5gNcNHrn1PBKovnWwap9iuwS69kzwegQo=",
+      "Microsoft.AspNetCore.Components.vqm51q09wr.wasm": "sha256-mXQh3jifdIKS+SNpHLqPrIO+jc5POWFFJIOnub7DEKw=",
       "Microsoft.AspNetCore.Components.Web.sxfdi1rlxf.wasm": "sha256-EIjfQfBAQi/x9N8Y+wjx466uklRnisF8m+sCprgDOaQ=",
       "Microsoft.AspNetCore.Components.WebAssembly.j2unnqjdzn.wasm": "sha256-+4ZJNcm+SgF06Z1jkH9dWBjW8kbc5BvfGr9RrTF8gw4=",
       "Microsoft.Extensions.Configuration.wzhhqnelnl.wasm": "sha256-XKu0mIlTddgbDgKXxAt72KH1jesOUPab12Fdli15Hmw=",
@@ -92,12 +92,12 @@
       "System.Net.Primitives.bn126x5ac2.wasm": "sha256-1y4I/y49VU9owasFk/RaSCfU/xzaE1eELg99KlQXorg=",
       "System.Private.Uri.v4mskcjx8e.wasm": "sha256-8exGs5PseYWhJ0RForDAVyBTqnD47OZqrpkVzsrtRzg=",
       "System.Runtime.InteropServices.0gjjf3ybo0.wasm": "sha256-MCRjCeayVfk7PLjpxolBTfj80eexQz38AjTKtqAQVU0=",
-      "System.Runtime.8b16emhf42.wasm": "sha256-JAIHPTlIqj0HA18lG59OBK0tydbORY57AfGe/sdS41g=",
+      "System.Runtime.lqmevmifir.wasm": "sha256-neFBAnQSMlImBe/YRsTVZvqyH4+UdAt8pycJoxx09Lk=",
       "System.Text.Encodings.Web.261hidhqyu.wasm": "sha256-1qlvW+GPp2+gK7M0la3P+tFyvHLjnWdJxTTlRol4TkU=",
       "System.Text.Json.coo5s0ts04.wasm": "sha256-LHg1Ir//WGVrRq+C9KBbAcAlQmOU3XlGC/go0pTgHiU=",
       "System.Text.RegularExpressions.pjhal65ko1.wasm": "sha256-VdTVx7BqfLgxpexvMTkSI3N233xrnZp5GxwrZM9G28k=",
       "System.Threading.7a33bthe19.wasm": "sha256-X0JtMvhyCYg+9jY6nlm0t3UJXdClPEuZjsJ9Pc/IaBM=",
-      "NomNotesBeta.0rz6he5hqv.wasm": "sha256-hMyevvourJD9llc/RQhBh0xJ3X4au/SRCFb5fWaO+nk="
+      "NomNotesBeta.prd1hrml7l.wasm": "sha256-9ZhFh7yy+001XLiA3X3P8Q7O2YEuigc41wEErDzhIJU="
     }
   },
   "cacheBootResources": true,
