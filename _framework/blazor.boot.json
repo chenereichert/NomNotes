@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "NomNotesBeta",
   "resources": {
-    "hash": "sha256-eDDFzKKuzdlKiAn4mzIzEHrClC4FDT2tbr+g1kGBxJA=",
+    "hash": "sha256-sBSuvD2ysyPF/KG7+WrXAPylelNLKwaV492aAvTZ05g=",
     "fingerprinting": {
       "Markdig.gg1qs60tnd.wasm": "Markdig.wasm",
       "Microsoft.AspNetCore.Components.vqm51q09wr.wasm": "Microsoft.AspNetCore.Components.wasm",
@@ -37,7 +37,7 @@
       "System.Text.RegularExpressions.pjhal65ko1.wasm": "System.Text.RegularExpressions.wasm",
       "System.Threading.7a33bthe19.wasm": "System.Threading.wasm",
       "System.Private.CoreLib.olb9c41wt0.wasm": "System.Private.CoreLib.wasm",
-      "NomNotesBeta.prd1hrml7l.wasm": "NomNotesBeta.wasm",
+      "NomNotesBeta.4h3o6ko0zc.wasm": "NomNotesBeta.wasm",
       "dotnet.js": "dotnet.js",
       "dotnet.native.l1ds2rhypd.js": "dotnet.native.js",
       "dotnet.native.etgrtk5jba.wasm": "dotnet.native.wasm",
@@ -97,7 +97,7 @@
       "System.Text.Json.coo5s0ts04.wasm": "sha256-LHg1Ir//WGVrRq+C9KBbAcAlQmOU3XlGC/go0pTgHiU=",
       "System.Text.RegularExpressions.pjhal65ko1.wasm": "sha256-VdTVx7BqfLgxpexvMTkSI3N233xrnZp5GxwrZM9G28k=",
       "System.Threading.7a33bthe19.wasm": "sha256-X0JtMvhyCYg+9jY6nlm0t3UJXdClPEuZjsJ9Pc/IaBM=",
-      "NomNotesBeta.prd1hrml7l.wasm": "sha256-9ZhFh7yy+001XLiA3X3P8Q7O2YEuigc41wEErDzhIJU="
+      "NomNotesBeta.4h3o6ko0zc.wasm": "sha256-mD2c7C5XkaRkgQUmD5YCnWK728tJkBZfJKaxEFnwVK8="
     }
   },
   "cacheBootResources": true,
