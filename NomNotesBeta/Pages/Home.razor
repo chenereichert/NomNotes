@@ -2,9 +2,12 @@
 @using Markdig
 @inject IJSRuntime JS
 
-<PageTitle>Daily Wellness Log</PageTitle>
+<PageTitle>NomNotes</PageTitle>
 
 <div class="container mt-4" style="max-width: 800px;">
+
+    @if (!isSubmitted)
+    {
     <h1 class="mb-4">🌱 Daily Wellness Log</h1>
     <p class="text-muted"><b>Date:</b> @DateTime.Today.ToString("MMMM dd, yyyy")</p>
 
@@ -105,15 +108,39 @@
             <textarea @bind="dailyLog.EndOfDayNotes" class="form-control" rows="3" placeholder="How did today go? Any reflections or symptoms?"></textarea>
         </div>
     </div>
+        <!-- The new Submit Button -->
+        <div class="mt-4 mb-5">
+            <button class="btn btn-primary w-100 btn-lg" @onclick="SubmitDay">✅ Complete & View Day</button>
+        </div>
+    }
+    else
+    {
+        <!-- RESULTS VIEW -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">📝 Daily Summary</h2>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-secondary" @onclick="EditDay">✏️ Edit Log</button>
+                <button class="btn btn-outline-primary" @onclick="CopyLog">📋 Copy</button>
+                <button class="btn btn-danger" @onclick="DownloadPdf">📕 Download PDF</button>
+            </div>
+        </div>
 
-    <!-- ACTION BUTTONS -->
-    <div class="d-flex gap-2 mb-5">
-        <button class="btn btn-success" @onclick="DownloadMarkdown">📄 Export to Markdown</button>
-        <button class="btn btn-danger" @onclick="DownloadPdf">📕 Export to PDF</button>
-    </div>
+        @if (copySuccess)
+        {
+            <div class="alert alert-success py-2">Copied to clipboard!</div>
+        }
+
+        <!-- The Generated HTML Preview -->
+        <div class="card shadow-sm mb-5">
+            <div class="card-body" style="font-family: Arial, sans-serif; line-height: 1.6;">
+                @((MarkupString)previewHtml)
+            </div>
+        </div>
+    }
 </div>
 
 @code {
+
     // 1. Data Models
     public class WellnessLog
     {
@@ -133,6 +160,10 @@
     // 2. State Management
     private WellnessLog dailyLog = new();
     private FoodEntry newEntry = new();
+    private bool isSubmitted = false;
+    private bool copySuccess = false;
+    private string rawMarkdown = string.Empty;
+    private string previewHtml = string.Empty;
 
     // 3. Logic to Add Food
     private void AddFoodEntry()
@@ -192,39 +223,47 @@
         }
 
         return sb.ToString();
+        // return "# Sample Log\n\n- Example text..."; // Replace with your actual StringBuilder logic
     }
-
-    // Existing Markdown Download
-    private async Task DownloadMarkdown()
+    private void SubmitDay()
     {
-        var markdownText = GetMarkdownString();
-        var bytes = System.Text.Encoding.UTF8.GetBytes(markdownText);
-        var base64 = Convert.ToBase64String(bytes);
-        var fileName = $"WellnessLog_{DateTime.Today:yyyy_MM_dd}.md";
+        // 1. Generate the Markdown based on current inputs
+        rawMarkdown = GetMarkdownString();
 
-        await JS.InvokeVoidAsync("downloadFileFromBase64", fileName, base64);
+        // 2. Convert it to HTML immediately for the preview screen
+        var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+        previewHtml = Markdown.ToHtml(rawMarkdown, pipeline);
+
+        // 3. Switch the UI state
+        isSubmitted = true;
+        copySuccess = false; // Reset copy alert
     }
 
-    // NEW: PDF Download
+    private void EditDay()
+    {
+        // Switches the UI back to the form so the user can make changes
+        isSubmitted = false;
+    }
+    private async Task CopyLog()
+    {
+        // We pass BOTH the pretty HTML and the raw Markdown (as a backup) to JavaScript
+        var success = await JS.InvokeAsync<bool>("copyRichTextToClipboard", previewHtml, rawMarkdown);
+    
+        if (success)
+        {
+            copySuccess = true;
+            StateHasChanged();
+        
+            await Task.Delay(3000);
+            copySuccess = false;
+            StateHasChanged();
+        }
+    }
+
     private async Task DownloadPdf()
     {
-        // 1. Get the Markdown text
-        var markdownText = GetMarkdownString();
-
-        // 2. Convert the Markdown to HTML using Markdig
-        var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
-        var rawHtml = Markdown.ToHtml(markdownText, pipeline);
-
-        // 3. Wrap it in a div to add some basic styling for the PDF
-        // (You can add CSS classes here if you want to style tables, fonts, etc.)
-        var styledHtml = $@"
-            <div style='font-family: Arial, sans-serif; color: #333; line-height: 1.6;'>
-                {rawHtml}
-            </div>";
-
-        var fileName = $"WellnessLog_{DateTime.Today:yyyy_MM_dd}.pdf";
-
-        // 4. Send the HTML to JavaScript to be printed as a PDF
-        await JS.InvokeVoidAsync("downloadPdfFromHtml", styledHtml, fileName);
+        // Pass the HTML directly to our new print function
+        await JS.InvokeVoidAsync("printHtmlAsPdf", previewHtml);
     }
+}
 }
